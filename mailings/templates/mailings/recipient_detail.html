@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ object.full_name }}</h2>
+<p><b>Email:</b> {{ object.email }}</p>
+<p><b>Комментарий:</b> {{ object.comment|default:"—" }}</p>
+<a class="btn btn-outline-secondary" href="{% url 'mailings:recipient_list' %}">Назад</a>
+<a class="btn btn-primary" href="{% url 'mailings:recipient_update' object.pk %}">Изменить</a>
+{% endblock %}

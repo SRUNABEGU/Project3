@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{% if object %}Редактирование{% else %}Создание{% endif %}</h2>
+<form method="post" class="mt-3">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button class="btn btn-primary">Сохранить</button>
+  <a class="btn btn-outline-secondary" href="javascript:history.back()">Отмена</a>
+</form>
+{% endblock %}

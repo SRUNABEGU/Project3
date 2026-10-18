@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3">
+  <h2>Рассылки</h2>
+  <a class="btn btn-primary" href="{% url 'mailings:mailing_create' %}">Создать</a>
+</div>
+<table class="table">
+  <tr>
+    <th>#</th><th>Сообщение</th><th>Период</th><th>Статус</th>
+    {% if perms.mailings.view_mailing %}<th>Владелец</th>{% endif %}
+    <th></th>
+  </tr>
+  {% for m in object_list %}
+  <tr>
+    <td>{{ m.pk }}</td>
+    <td>{{ m.message.subject }}</td>
+    <td>{{ m.start_time|date:"d.m.Y H:i" }} — {{ m.end_time|date:"d.m.Y H:i" }}</td>
+    <td>
+      {{ m.status }}
+      {% if m.is_disabled %}<span class="badge bg-secondary">отключена</span>{% endif %}
+    </td>
+    {% if perms.mailings.view_mailing %}<td>{{ m.owner.email }}</td>{% endif %}
+    <td class="text-end">
+      <a href="{% url 'mailings:mailing_detail' m.pk %}">Открыть</a>
+      {% if m.owner_id == user.id %}
+        | <a href="{% url 'mailings:mailing_update' m.pk %}">Изменить</a>
+        | <a href="{% url 'mailings:mailing_delete' m.pk %}">Удалить</a>
+      {% endif %}
+    </td>
+  </tr>
+  {% empty %}<tr><td colspan="6">Пока пусто</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}
