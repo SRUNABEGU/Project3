@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Статистика{% endblock %}
+{% block content %}
+<h2 class="mb-4">Статистика рассылок</h2>
+
+<div class="row text-center mb-4">
+  <div class="col-md-3 mb-3">
+    <div class="card"><div class="card-body">
+      <div class="display-5 text-success">{{ success }}</div>
+      <div class="text-muted">Успешных попыток</div>
+    </div></div>
+  </div>
+  <div class="col-md-3 mb-3">
+    <div class="card"><div class="card-body">
+      <div class="display-5 text-danger">{{ fail }}</div>
+      <div class="text-muted">Неуспешных попыток</div>
+    </div></div>
+  </div>
+  <div class="col-md-3 mb-3">
+    <div class="card"><div class="card-body">
+      <div class="display-5">{{ success }}</div>
+      <div class="text-muted">Отправлено сообщений</div>
+    </div></div>
+  </div>
+  <div class="col-md-3 mb-3">
+    <div class="card"><div class="card-body">
+      <div class="display-5">{{ rate }}%</div>
+      <div class="text-muted">Доля успешных</div>
+    </div></div>
+  </div>
+</div>
+
+<h5>По рассылкам</h5>
+<table class="table">
+  <tr>
+    <th>#</th><th>Сообщение</th><th>Статус</th>
+    <th class="text-success">Успешно</th><th class="text-danger">Не успешно</th>
+  </tr>
+  {% for m in mailings %}
+  <tr>
+    <td><a href="{% url 'mailings:mailing_detail' m.pk %}">{{ m.pk }}</a></td>
+    <td>{{ m.message.subject }}</td>
+    <td>{{ m.status }}</td>
+    <td>{{ m.success }}</td>
+    <td>{{ m.fail }}</td>
+  </tr>
+  {% empty %}<tr><td colspan="5">Пока пусто</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}
