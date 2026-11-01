@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Пользователи</h2>
+<table class="table">
+  <tr><th>Email</th><th>Статус</th><th></th></tr>
+  {% for u in object_list %}
+  <tr>
+    <td>{{ u.email }}</td>
+    <td>
+      {% if u.is_blocked %}Заблокирован
+      {% elif not u.is_active %}Не подтвердил email
+      {% else %}Активен{% endif %}
+    </td>
+    <td class="text-end">
+      {% if perms.users.can_block_user and u.pk != user.pk and not u.is_superuser %}
+      <form method="post" action="{% url 'users:user_block' u.pk %}" class="d-inline">
+        {% csrf_token %}
+        <button class="btn btn-sm {% if u.is_blocked %}btn-success{% else %}btn-danger{% endif %}">
+          {% if u.is_blocked %}Разблокировать{% else %}Заблокировать{% endif %}
+        </button>
+      </form>
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

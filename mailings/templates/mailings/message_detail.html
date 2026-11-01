@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ object.subject }}</h2>
+<p style="white-space: pre-line">{{ object.body }}</p>
+<a class="btn btn-outline-secondary" href="{% url 'mailings:message_list' %}">Назад</a>
+<a class="btn btn-primary" href="{% url 'mailings:message_update' object.pk %}">Изменить</a>
+{% endblock %}

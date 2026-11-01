@@ -6,8 +6,11 @@ authors = [
     {name = "ruslan",email = "ruslanpetryakov@yandex.ru"}
 ]
 readme = "README.md"
-requires-python = "^3.14"
+requires-python = ">=3.13"
 dependencies = [
+    "django (>=6.1.2,<7.0.0)",
+    "python-dotenv (>=1.2.4,<2.0.0)",
+    "redis (>=8.1.0,<9.0.0)",
 ]
 
 

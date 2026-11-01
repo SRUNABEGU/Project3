@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Рассылка #{{ object.pk }} — {{ object.status }}</h2>
+{% if object.is_disabled %}<span class="badge bg-secondary mb-2">Отключена менеджером</span>{% endif %}
+{% if perms.mailings.view_mailing %}<p><b>Владелец:</b> {{ object.owner.email }}</p>{% endif %}
+<p><b>Период:</b> {{ object.start_time|date:"d.m.Y H:i" }} — {{ object.end_time|date:"d.m.Y H:i" }}</p>
+<p><b>Сообщение:</b> {{ object.message.subject }}</p>
+<p><b>Получатели:</b></p>
+<ul>
+  {% for r in object.recipients.all %}<li>{{ r.full_name }} ({{ r.email }})</li>{% endfor %}
+</ul>
+<h5 class="mt-4">Попытки отправки</h5>
+<table class="table table-sm">
+  <tr><th>Время</th><th>Статус</th><th>Ответ</th></tr>
+  {% for a in object.attempts.all %}
+  <tr>
+    <td>{{ a.attempt_time|date:"d.m.Y H:i:s" }}</td>
+    <td>{{ a.status }}</td>
+    <td>{{ a.server_response }}</td>
+  </tr>
+  {% empty %}<tr><td colspan="3">Попыток пока нет</td></tr>
+  {% endfor %}
+</table>
+<a class="btn btn-outline-secondary" href="{% url 'mailings:mailing_list' %}">Назад</a>
+
+{% if object.owner_id == user.id %}
+  <a class="btn btn-primary" href="{% url 'mailings:mailing_update' object.pk %}">Изменить</a>
+  <form method="post" action="{% url 'mailings:mailing_send' object.pk %}" class="d-inline">
+    {% csrf_token %}
+    <button class="btn btn-success">Отправить</button>
+  </form>
+{% endif %}
+
+{% if perms.mailings.can_disable_mailing %}
+  <form method="post" action="{% url 'mailings:mailing_toggle' object.pk %}" class="d-inline">
+    {% csrf_token %}
+    <button class="btn btn-warning">
+      {% if object.is_disabled %}Включить{% else %}Отключить{% endif %}
+    </button>
+  </form>
+{% endif %}
+{% endblock %}
